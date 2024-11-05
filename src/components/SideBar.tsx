@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useStore } from './store';
+import { useStore } from '../utils/store';
 import { FaHome, FaEnvelope, FaBell } from 'react-icons/fa';
 import { CiLogout } from 'react-icons/ci';
 
@@ -24,7 +24,7 @@ function Sidebar() {
             <FaEnvelope size={24} />
             <span className="mt-1">Messages</span>
           </Link>
-          <Link to="/notification" className="flex flex-col items-center text-sm hover:text-gray-300">
+          <Link to="/activity" className="flex flex-col items-center text-sm hover:text-gray-300">
             <FaBell size={24} />
             <span className="mt-1">Activity</span>
           </Link>

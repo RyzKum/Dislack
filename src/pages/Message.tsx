@@ -1,4 +1,4 @@
-import Sidebar from "./SideBar";
+import Sidebar from "../components/SideBar";
 import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
 import axios from "axios";

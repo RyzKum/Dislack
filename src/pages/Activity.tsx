@@ -1,4 +1,4 @@
-import Sidebar from './SideBar';
+import Sidebar from '../components/SideBar';
 
 function Notification () {
   return (

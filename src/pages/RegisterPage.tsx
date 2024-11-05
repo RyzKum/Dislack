@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useStore } from "./store";
+import { useStore } from "../utils/store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";

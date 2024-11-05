@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import './index.css';
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
-import Dashboard from './Dashboard';
-import Message from './Message';
-import Notification from './Notification';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import Dashboard from './pages/Dashboard';
+import Message from './pages/Message';
+import Activity from './pages/Activity';
 
 function Home() {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/message" element={<Message />} />
-        <Route path="/notification" element={<Notification />} />
+        <Route path="/activity" element={<Activity />} />
       </Routes>
     </Router>
   );
