@@ -1,29 +1,37 @@
 import { useForm } from "react-hook-form";
 import { useStore } from "./store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+
+interface FormData {
+  username: string;
+  password: string;
+}
 
 function RegisterPage() {
-    
-  const { register, handleSubmit } = useForm<{
-    pseudo: string;
-    email: string;
-    password: string;
-  }>();
-  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
   const setUser = useStore((state) => state.setUser);
   const navigate = useNavigate();
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const onSubmit = (data: {
-    pseudo: string;
-    email: string;
-    password: string;
-  }) => {
-    const newUser = {
-      id: Date.now(),
-      ...data,
-    };
-    setUser(newUser);
-    navigate("/dashboard");
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/register",
+        data
+      );
+      const newUser = response.data;
+
+      setUser(newUser);
+      navigate("/dashboard");
+    } catch (error) {
+      setSubmitError("Erreur lors de l'inscription. Veuillez réessayer.");
+    }
   };
 
   return (
@@ -35,36 +43,66 @@ function RegisterPage() {
         <h2 className="text-3xl font-semibold mb-6 text-center">
           Create Your Account
         </h2>
+
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium">Pseudo</label>
+          <label className="block mb-2 text-sm font-medium">Username</label>
           <input
-            {...register("pseudo")}
+            {...register("username", { required: "Le username est requis" })}
             type="text"
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username.message}</p>
+          )}
         </div>
-        <div className="mb-4">
+
+        {/* <div className="mb-4">
           <label className="block mb-2 text-sm font-medium">Email</label>
           <input
-            {...register("email")}
+            {...register("email", {
+              required: "L'email est requis",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Email invalide",
+              },
+            })}
             type="email"
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
-        </div>
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
+        </div> */}
+
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium">Password</label>
           <input
             type="password"
-            {...register("password")}
+            {...register("password", {
+              required: "Le mot de passe est requis",
+              minLength: {
+                value: 6,
+                message: "Le mot de passe doit comporter au moins 6 caractères",
+              },
+            })}
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
         </div>
+
+        {submitError && (
+          <p className="text-red-500 text-sm mb-4">{submitError}</p>
+        )}
+
         <button
           type="submit"
           className="w-full bg-gray-800 text-white p-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
         >
           Register
         </button>
+
         <p className="mt-4 text-center">
           Already have an account?{" "}
           <span
