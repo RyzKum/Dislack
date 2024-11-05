@@ -1,6 +1,6 @@
-import Sidebar from './SideBar';
+import Sidebar from "./SideBar";
 
-function Message () {
+function Message() {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -10,6 +10,6 @@ function Message () {
       </div>
     </div>
   );
-};
+}
 
 export default Message;
