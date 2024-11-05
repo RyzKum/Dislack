@@ -9,6 +9,7 @@ function RegisterPage() {
     email: string;
     password: string;
   }>();
+  
   const setUser = useStore((state) => state.setUser);
   const navigate = useNavigate();
 

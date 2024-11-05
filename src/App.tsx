@@ -3,7 +3,9 @@ import './App.css';
 import './index.css';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
-import Dashboard from './dashboard';
+import Dashboard from './Dashboard';
+import Message from './Message';
+import Notification from './Notification';
 
 function Home() {
   const navigate = useNavigate();
@@ -44,6 +46,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/message" element={<Message />} />
+        <Route path="/notification" element={<Notification />} />
       </Routes>
     </Router>
   );

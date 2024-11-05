@@ -1,15 +1,14 @@
 import Sidebar from './SideBar';
 
-function Dashboard() {
-
+function Notification () {
   return (
     <div className="flex min-h-screen">
-            <Sidebar />
+      <Sidebar />
       <div className="flex-1 bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold mb-8">Welcome to the Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-8">Notification</h1>
       </div>
     </div>
   );
-}
+};
 
-export default Dashboard;
+export default Notification;
