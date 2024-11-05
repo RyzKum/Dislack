@@ -6,6 +6,7 @@ import { CiLogout } from 'react-icons/ci';
 function Sidebar() {
   const navigate = useNavigate();
   const setUser = useStore((state) => state.setUser);
+  const currUser = useStore((state) => state.user);
 
   const handleLogout = () => {
     setUser(null);
@@ -29,6 +30,9 @@ function Sidebar() {
             <span className="mt-1">Activity</span>
           </Link>
         </nav>
+        <p>
+          {currUser ? currUser.pseudo : ''}
+        </p>
         <button
           onClick={handleLogout}
           className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"

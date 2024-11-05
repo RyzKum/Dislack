@@ -25,6 +25,8 @@ function RegisterPage() {
         "http://localhost:3000/auth/register",
         data
       );
+      console.log(response)
+      console.log(response.data)
       const newUser = response.data;
 
       setUser(newUser);

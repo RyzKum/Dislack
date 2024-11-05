@@ -21,6 +21,8 @@ function LoginPage() {
         data,
         { withCredentials: true }
       );
+      console.log(response)
+      console.log(response.data)
       const userData = response.data;
 
       setUser(userData);
