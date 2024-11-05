@@ -18,7 +18,7 @@ function Sidebar() {
         <nav className="flex-1 space-y-6 mt-4">
           <Link to="/dashboard" className="flex flex-col items-center text-sm hover:text-gray-300">
             <FaHome size={24} />
-            <span className="mt-1">Accueil</span>
+            <span className="mt-1">Home</span>
           </Link>
           <Link to="/message" className="flex flex-col items-center text-sm hover:text-gray-300">
             <FaEnvelope size={24} />
@@ -26,7 +26,7 @@ function Sidebar() {
           </Link>
           <Link to="/notification" className="flex flex-col items-center text-sm hover:text-gray-300">
             <FaBell size={24} />
-            <span className="mt-1">Activité</span>
+            <span className="mt-1">Activity</span>
           </Link>
         </nav>
         <button

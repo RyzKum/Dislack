@@ -1,20 +1,32 @@
 import { useForm } from "react-hook-form";
 import { useStore } from "./store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 function LoginPage() {
-  const { register, handleSubmit } = useForm<{
-    email: string;
-    password: string;
-  }>();
-  const user = useStore((state) => state.user);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ username: string; password: string }>();
+  const setUser = useStore((state) => state.setUser);
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState<string | null>(null);
 
-  const onSubmit = (data: { email: string; password: string }) => {
-    if (user && user.email === data.email && user.password === data.password) {
+  const onSubmit = async (data: { username: string; password: string }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        data,
+        { withCredentials: true }
+      );
+      const userData = response.data;
+
+      setUser(userData);
       navigate("/dashboard");
-    } else {
-      alert("Invalid credentials");
+    } catch (error) {
+      setLoginError("Identifiants invalides, veuillez réessayer.");
     }
   };
 
@@ -27,28 +39,44 @@ function LoginPage() {
         <h2 className="text-3xl font-semibold mb-6 text-center">
           Login to Your Account
         </h2>
+
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium">Email</label>
+          <label className="block mb-2 text-sm font-medium">Username</label>
           <input
-            {...register("email")}
-            type="email"
+            {...register("username", { required: "Le username est requis" })}
+            type="username"
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username.message}</p>
+          )}
         </div>
+
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium">Password</label>
           <input
             type="password"
-            {...register("password")}
+            {...register("password", {
+              required: "Le mot de passe est requis",
+            })}
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
         </div>
+
+        {loginError && (
+          <p className="text-red-500 text-sm mb-4">{loginError}</p>
+        )}
+
         <button
           type="submit"
           className="w-full bg-blue-500 text-white p-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
         >
           Login
         </button>
+
         <p className="mt-4 text-center">
           Don't have an account?{" "}
           <span
