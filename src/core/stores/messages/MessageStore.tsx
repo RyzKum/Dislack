@@ -1,15 +1,8 @@
 import { create } from "zustand";
-
-export type MessageType = {
-  id: string;
-  content: string;
-  emitterId: string;
-  sendAt: string;
-}
-
+import { MessageType } from "../../../types/Message";
 interface MessageState {
   messages: MessageType[];
-  addMessage: (content: string, emitterId: string) => void;
+  addMessage: (content: string, emitterId: string) => string;
   setMessages: (newMessages: MessageType[]) => void;
   removeMessage: (uid: string) => void;
 }

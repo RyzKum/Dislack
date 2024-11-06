@@ -4,38 +4,32 @@ import { useState } from "react";
 import { registerUser } from "../../core/requests/auth/Register";
 import { getUserData, loginUser } from "../../core/requests/auth/Login";
 import { useUserStore } from "../../core/stores/user/UserStore";
-
-interface FormData {
-  username: string;
-  password: string;
-}
+import { RegisterData } from "../../types/RegisterData";
 
 function RegisterPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<RegisterData>();
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const setUser = useUserStore((state) => state.setUser);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: RegisterData) => {
     try {
-      registerUser(data).then(
-        res => {
-          console.log(res); 
-          loginUser(data).then(async res => {
-            if (res.status === 201) {
-              const user = await getUserData();
-              setUser(user.data);
-              navigate("/dashboard");
-            } else {
-              setSubmitError("Error during log in, try again.");
-            }
-          })
-        }
-      );
+      registerUser(data).then((res) => {
+        console.log(res);
+        loginUser(data).then(async (res) => {
+          if (res.status === 201) {
+            const user = await getUserData();
+            setUser(user.data);
+            navigate("/dashboard");
+          } else {
+            setSubmitError("Error during log in, try again.");
+          }
+        });
+      });
     } catch (error) {
       setSubmitError("Erreur lors de l'inscription, veuillez réessayer.");
       console.error(error);

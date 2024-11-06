@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
-import axios from "axios";
 import { Input } from "../../types/Input";
 import useFriendListStore, {
-  Friend,
 } from "../../core/stores/friends/FriendListStore";
-import { MessageType, useMessageStore } from "../../core/stores/messages/MessageStore";
+import {
+  useMessageStore,
+} from "../../core/stores/messages/MessageStore";
+import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
+import { Friend } from "../../types/Friend";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -16,42 +18,30 @@ function Message() {
   const [currFriend, setCurrFriend] = useState<Friend>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
-
-  const {
-    register,
-    handleSubmit,
-  } = useForm<Input>();
+  const { register, handleSubmit, formState: { errors } } = useForm<Input>();
 
   useEffect(() => {
     fetchFriends();
   }, [fetchFriends]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim()) {
       const messageId = addMessage(input, currUser!.id);
-      axios
-        .post(
-          `http://localhost:3000/chat/${messageId}/send`,
-          { receiverId: currFriend!.userId, content: input },
-          { withCredentials: true }
-        )
-        .then(() => {})
-        .catch((error) => {
-          console.error("Error sending message :", error);
-        });
+      try {
+        await sendMessage(messageId, currFriend!.userId, input); 
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
       setInput("");
     }
   };
 
   useEffect(() => {
     if (currFriend) {
-      axios
-        .get(`http://localhost:3000/messages/${currFriend.userId}`, {
-          withCredentials: true,
-        })
-        .then((response: {data: MessageType[]}) => {
+      fetchMessages(currFriend.userId)
+        .then((res) => {
           setMessages([]);
-          setMessages(response.data.reverse());
+          setMessages(res.data.reverse)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
