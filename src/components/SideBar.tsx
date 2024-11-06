@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../utils/store';
 import { FaHome, FaEnvelope, FaBell } from 'react-icons/fa';
 import { CiLogout } from 'react-icons/ci';
+import { FaRegClipboard } from "react-icons/fa";
+import { useEffect } from 'react';
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -12,6 +14,16 @@ function Sidebar() {
     setUser(null);
     navigate('/login');
   };
+
+  const copyCode = () => {
+    console.log('code')
+  }
+
+  useEffect(() => {
+    if(currUser == null) {
+      navigate("/login");
+    }
+  }, [currUser, navigate])
 
   return (
     <div className="flex min-h-screen">
@@ -30,9 +42,12 @@ function Sidebar() {
             <span className="mt-1">Activity</span>
           </Link>
         </nav>
-        <p>
-          {currUser ? currUser.pseudo : ''}
-        </p>
+        <button
+          onClick={copyCode}
+          className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"
+        >
+          <FaRegClipboard size={20} />
+        </button>
         <button
           onClick={handleLogout}
           className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"
