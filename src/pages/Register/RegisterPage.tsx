@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useUserStore } from "../../core/stores/user/UserStore";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { registerUser } from "../../core/requests/auth/Register";
+import { getUserData, loginUser } from "../../core/requests/auth/Login";
+import { useUserStore } from "../../core/stores/user/UserStore";
 
 interface FormData {
   username: string;
@@ -15,17 +16,29 @@ function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const setUser = useUserStore((state) => state.setUser);
 
   const onSubmit = async (data: FormData) => {
     try {
-      const newUser = await registerUser(data);
-      setUser(newUser);
-      navigate("/dashboard");
+      registerUser(data).then(
+        res => {
+          console.log(res); 
+          loginUser(data).then(async res => {
+            if (res.status === 201) {
+              const user = await getUserData();
+              setUser(user.data);
+              navigate("/dashboard");
+            } else {
+              setSubmitError("Error during log in, try again.");
+            }
+          })
+        }
+      );
     } catch (error) {
-      setSubmitError(error.message);
+      setSubmitError("Erreur lors de l'inscription, veuillez réessayer.");
+      console.error(error);
     }
   };
 
