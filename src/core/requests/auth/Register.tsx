@@ -1,5 +1,5 @@
 import axios from "axios";
-import { RegisterData } from "../../../types/FormData";
+import { RegisterData } from "../../../types/RegisterData";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

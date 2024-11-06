@@ -4,7 +4,7 @@ import { useState } from "react";
 import { registerUser } from "../../core/requests/auth/Register";
 import { getUserData, loginUser } from "../../core/requests/auth/Login";
 import { useUserStore } from "../../core/stores/user/UserStore";
-import { RegisterData } from "../../types/FormData";
+import { RegisterData } from "../../types/RegisterData";
 
 function RegisterPage() {
   const {
