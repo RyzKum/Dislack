@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from "axios";
 
-interface Friend {
+export interface Friend {
   userId: string;
   username: string;
   startedAt: string;

@@ -2,7 +2,7 @@ import Sidebar from "./SideBar";
 import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
 import axios from "axios";
-import { useMessageStore } from "./components/uidMessageState";
+import { useMessageStore } from "./utils/uidMessageState";
 
 function Message() {
   const [input, setInput] = useState("");

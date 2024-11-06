@@ -1,9 +1,15 @@
 import { create } from "zustand";
 
+export interface MessageContent {
+  content: string,
+  emitterId: string,
+  sendAt?: string
+}
+
 interface MessageState {
-  messages: Map<string, string>;
-  addMessage: (content: string) => void;
-  setMessages: (newMessages: Map<string, string>) => void;
+  messages: Map<string, MessageContent>;
+  addMessage: (content: MessageContent) => void;
+  setMessages: (newMessages: Map<string, MessageContent>) => void;
   removeMessage: (uid: string) => void;
 }
 

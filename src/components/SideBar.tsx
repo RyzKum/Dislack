@@ -47,6 +47,8 @@ function Sidebar() {
           </Link>
         </nav>
         <div className='flex flex-col justify-center items-center mb-2'>
+          <p className='text-xs mb-6 px-1 text-wrap text-center'>Currently logged in as: {currUser?.username}</p>
+
           <p className='text-xs mb-1 px-1 text-wrap text-center'>{hint}</p>
           <button
             onClick={copyCode}
