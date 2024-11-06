@@ -69,8 +69,8 @@ function Message() {
           {friends.map((friend, index) => (
             <button
               onClick={() => {
+                setMessages([]);
                 setCurrFriend(friend);
-                setMessages(new Map());
               }}
               key={index}
               className="bg-white w-full p-4 rounded mb-2 shadow flex items-center text-black hover:bg-gray-400 active:bg-gray-500"
@@ -92,8 +92,8 @@ function Message() {
         </div>
 
         <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
-            {Array.from(messages.entries()).map(([uid, message]) => (
-              <div key={uid} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
+            {messages.map((message) => (
+              <div key={message.id} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
               ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
                 {message.content}
                 <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">{message.sendAt?.slice(11, -8)}</p>
