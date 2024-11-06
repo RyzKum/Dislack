@@ -3,15 +3,10 @@ import { FaHome, FaEnvelope, FaBell, FaRegClipboard } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useState, useEffect } from "react";
 import { useUserStore } from "../core/stores/user/UserStore";
+import NotificationContainer from "./NotificationContainer";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<
-    {
-      message: string;
-      type: "message" | "friend_request" | "request_accepted";
-    }[]
-  >([]);
   const setUser = useUserStore((state) => state.setUser);
   const currUser = useUserStore((state) => state.user);
   const [hint, setHint] = useState("Copy friend code :");
@@ -81,6 +76,7 @@ function Sidebar() {
           <CiLogout size={20} />
         </button>
       </div>
+      <NotificationContainer />
     </div>
   );
 }

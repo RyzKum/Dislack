@@ -1,39 +1,26 @@
-import Notification from "./Notification";
-import { Link } from "react-router-dom";
+import { useNotifications } from "../core/requests/notification/Notification";
+import { useNotificationStore } from "../core/stores/notification/NotificationStore";
 
-interface NotificationContainerProps {
-  notifications: {
-    message: string;
-    type: "message" | "friend_request" | "request_accepted";
-  }[];
-  removeNotification: (index: number) => void;
-}
+const NotificationContainer = () => {
+  const notifications = useNotificationStore((state) => state.notifications);
 
-const NotificationContainer: React.FC<NotificationContainerProps> = ({
-  notifications,
-  removeNotification,
-}) => {
+  useNotifications((eventType, data) => {
+    // console.log(`Adding notification: ${eventType}`, data);
+    useNotificationStore.getState().addNotification(eventType, data);
+  });
+
+  // console.log("Rendering NotificationContainer with notifications:", notifications);
+
   return (
-    <div className="fixed top-4 right-4 space-y-4 w-80">
-      {notifications
-        .slice(-6)
-        .reverse()
-        .map((notification, index) => (
-          <Notification
-            key={index}
-            message={notification.message}
-            type={notification.type}
-            onClose={() => removeNotification(notifications.length - 1 - index)}
-          />
+    <div className="fixed top-0 right-0 m-4 p-4 bg-blue-500 text-white shadow-lg rounded-lg max-w-xs">
+      <h2 className="text-lg font-bold mb-2">Notifications</h2>
+      <ul>
+        {notifications.map((notification, index) => (
+          <li key={index} className="mb-1">
+            <strong>{notification.eventType}:</strong> {JSON.stringify(notification.data)}
+          </li>
         ))}
-      {notifications.length > 6 && (
-        <Link
-          to="/activity"
-          className="block bg-gray-200 text-center text-blue-500 py-2 rounded shadow-lg"
-        >
-          See all notifications
-        </Link>
-      )}
+      </ul>
     </div>
   );
 };

@@ -4,12 +4,14 @@ import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
 import AddFriendPopup from "../../components/AddFriendPop";
 import useFriendStore from "../../core/stores/friends/FriendListStore";
 import useFriendRequestStore from "../../core/stores/friend-pendings/FriendPending";
+import { useUserStore } from "../../core/stores/user/UserStore";
 
 function Dashboard() {
   const { friends, fetchFriends } = useFriendStore();
   const { friendRequests, fetchFriendsRequests, acceptRequest } =
     useFriendRequestStore();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const currUser = useUserStore((state) => state.user);
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
@@ -25,7 +27,7 @@ function Dashboard() {
       <Sidebar />
       <div className="flex-1 p-8">
         <h1 className="text-3xl font-bold mb-8">
-          Welcome to the Dashboard, User 🖖 !{" "}
+          Welcome to the Dashboard, {currUser?.username} 🖖 !{" "}
         </h1>
         <div className="flex space-x-4">
           <div className="flex-1 bg-[#4a2c4a] p-4 rounded-lg shadow-lg">
