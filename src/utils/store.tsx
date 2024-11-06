@@ -1,10 +1,8 @@
 import { create } from 'zustand';
 
 interface User {
-  id: number;
-  pseudo: string;
-  email: string;
-  password: string;
+  id: string,
+  username: string,
 }
 
 interface StoreState {

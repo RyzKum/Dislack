@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useStore } from "./store";
+import { useStore } from "../utils/store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
@@ -25,12 +25,15 @@ function RegisterPage() {
         "http://localhost:3000/auth/register",
         data
       );
+      console.log(response)
+      console.log(response.data)
       const newUser = response.data;
 
       setUser(newUser);
       navigate("/dashboard");
     } catch (error) {
       setSubmitError("Erreur lors de l'inscription. Veuillez réessayer.");
+      console.log(error);
     }
   };
 
