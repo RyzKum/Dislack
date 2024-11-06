@@ -16,7 +16,7 @@ function Message() {
   const [currFriend, setCurrFriend] = useState<Friend | undefined>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
-  const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+  const { register, handleSubmit } = useForm<Input>();
 
   useEffect(() => {
     fetchFriends();
@@ -39,7 +39,7 @@ function Message() {
       fetchMessages(currFriend.userId)
         .then((res) => {
           setMessages([]);
-          setMessages(res.data);
+          setMessages(res.data.reverse)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -77,14 +77,13 @@ function Message() {
           </h2>
         </div>
 
-        <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
+        <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
             {messages.map((message) => (
-              <div key={message.id} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
-              ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
-                <div>{formatLink(message.content)}</div>
-                <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">
-                  {message.sendAt?.slice(11, -8)}
-                </p>
+              <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
+              ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
+              ${message.sendAt != '' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white': 'bg-gray-400'}`}>
+                {message.content}
+                <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">{message.sendAt != '' ? message.sendAt.slice(11, -8) : 'Loading'}</p>
               </div>
             ))}
         </div>

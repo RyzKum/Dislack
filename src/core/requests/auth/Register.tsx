@@ -9,5 +9,6 @@ export const registerUser = async (data: RegisterData) => {
     return response.data;
   } catch (error) {
     throw new Error("Erreur lors de l'inscription. Veuillez réessayer.");
+    console.error(error)
   }
 };

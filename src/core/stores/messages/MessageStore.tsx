@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { Message } from "../../../types/Message";
+import { MessageType } from "../../../types/Message";
 interface MessageState {
-  messages: Message[];
+  messages: MessageType[];
   addMessage: (content: string, emitterId: string) => string;
-  setMessages: (newMessages: Message[]) => void;
+  setMessages: (newMessages: MessageType[]) => void;
   removeMessage: (uid: string) => void;
 }
 
@@ -12,11 +12,11 @@ export const useMessageStore = create<MessageState>((set) => ({
 
   addMessage: (content, id) => {
     const uid = crypto.randomUUID();
-    const newMessage: Message = {
+    const newMessage: MessageType = {
       id: uid,
       content: content,
       emitterId: id,
-      sendAt:  new Date().toDateString(),
+      sendAt: '',
     }
     set((state) => {
       const newMessages = state.messages;
