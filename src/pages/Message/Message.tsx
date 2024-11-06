@@ -1,9 +1,8 @@
 import Sidebar from "../../components/SideBar";
 import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
-import axios from "axios";
 import { Input } from "../../types/Input";
 import useFriendListStore, {
   Friend,
@@ -12,6 +11,7 @@ import {
   MessageContent,
   useMessageStore,
 } from "../../core/stores/messages/MessageStore";
+import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -19,57 +19,36 @@ function Message() {
   const [currFriend, setCurrFriend] = useState<Friend>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Input>();
+  const { register, handleSubmit, formState: { errors } } = useForm<Input>();
 
   useEffect(() => {
     fetchFriends();
   }, [fetchFriends]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim()) {
       const messageId = addMessage({ content: input, emitterId: currUser!.id });
-      axios
-        .post(
-          `http://localhost:3000/chat/${messageId}/send`,
-          { receiverId: currFriend!.userId, content: input },
-          { withCredentials: true }
-        )
-        .then((res) => {})
-        .catch((error) => {
-          console.error("Error sending message :", error);
-        });
+      try {
+        await sendMessage(messageId, currFriend!.userId, input); 
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
       setInput("");
     }
   };
 
   useEffect(() => {
     if (currFriend) {
-      axios
-        .get(`http://localhost:3000/messages/${currFriend.userId}`, {
-          withCredentials: true,
-        })
-        .then((response) => {
+      fetchMessages(currFriend.userId) 
+        .then((data) => {
           const fetchedMessages = new Map<string, MessageContent>();
-          console.log(response.data);
-          response.data.forEach(
-            (msg: {
-              id: string;
-              content: string;
-              emitterId: string;
-              sendAt: string;
-            }) => {
-              fetchedMessages.set(msg.id, {
-                content: msg.content,
-                emitterId: msg.emitterId,
-                sendAt: msg.sendAt,
-              });
-            }
-          );
+          data.forEach((msg) => {
+            fetchedMessages.set(msg.id, {
+              content: msg.content,
+              emitterId: msg.emitterId,
+              sendAt: msg.sendAt,
+            });
+          });
           setMessages(fetchedMessages);
         })
         .catch((error) => {

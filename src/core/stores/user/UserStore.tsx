@@ -1,9 +1,6 @@
 import { create } from "zustand";
+import { User } from "../../../types/User";
 
-interface User {
-  id: string;
-  username: string;
-}
 
 interface StoreState {
   user: User | null;
