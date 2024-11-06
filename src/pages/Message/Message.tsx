@@ -18,7 +18,7 @@ function Message() {
   const [currFriend, setCurrFriend] = useState<Friend>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
-  const { register, handleSubmit, formState: { errors } } = useForm<Input>();
+  const { register, handleSubmit } = useForm<Input>();
 
   useEffect(() => {
     fetchFriends();
