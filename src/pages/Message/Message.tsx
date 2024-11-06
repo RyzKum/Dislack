@@ -8,7 +8,7 @@ import { Input } from "../../types/Input";
 import useFriendListStore, {
   Friend,
 } from "../../core/stores/friends/FriendListStore";
-import { useMessageStore } from "../../core/stores/messages/MessageStore";
+import { MessageType, useMessageStore } from "../../core/stores/messages/MessageStore";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -20,7 +20,6 @@ function Message() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<Input>();
 
   useEffect(() => {
@@ -36,7 +35,7 @@ function Message() {
           { receiverId: currFriend!.userId, content: input },
           { withCredentials: true }
         )
-        .then((res) => {})
+        .then(() => {})
         .catch((error) => {
           console.error("Error sending message :", error);
         });
@@ -50,8 +49,9 @@ function Message() {
         .get(`http://localhost:3000/messages/${currFriend.userId}`, {
           withCredentials: true,
         })
-        .then((response) => {
-          setMessages(response.data);
+        .then((response: {data: MessageType[]}) => {
+          setMessages([]);
+          setMessages(response.data.reverse());
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -71,7 +71,6 @@ function Message() {
           {friends.map((friend, index) => (
             <button
               onClick={() => {
-                setMessages([]);
                 setCurrFriend(friend);
               }}
               key={index}
@@ -93,12 +92,13 @@ function Message() {
           </h2>
         </div>
 
-        <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
+        <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
             {messages.map((message) => (
-              <div key={message.id} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
-              ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
+              <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
+              ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
+              ${message.sendAt != '' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white': 'bg-gray-400'}`}>
                 {message.content}
-                <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">{message.sendAt?.slice(11, -8)}</p>
+                <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">{message.sendAt != '' ? message.sendAt.slice(11, -8) : 'Loading'}</p>
               </div>
             ))}
         </div>
