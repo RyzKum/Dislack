@@ -1,14 +1,14 @@
 import Sidebar from '../components/SideBar';
 
-function Notification () {
+function Activity () {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#633d68] text-white">
       <Sidebar />
-      <div className="flex-1 bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold mb-8">Notification</h1>
+      <div className="flex-1 p-8">
+        <h1 className="text-3xl font-bold mb-8">Activity</h1>
       </div>
     </div>
   );
 };
 
-export default Notification;
+export default Activity;
