@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
 import AddFriendPopup from "../../components/AddFriendPop";
 import useFriendStore from "../../core/stores/friends/FriendListStore";
-import useFriendRequestStore from "../../utils/FriendPending";
+import useFriendRequestStore from "../../core/stores/friend-pendings/FriendPending";
 
 function Dashboard() {
   const { friends, fetchFriends } = useFriendStore();
