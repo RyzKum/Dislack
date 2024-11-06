@@ -4,18 +4,16 @@ import { FaUser, FaPaperPlane } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
 import { Input } from "../../types/Input";
-import useFriendListStore, {
-} from "../../core/stores/friends/FriendListStore";
-import {
-  useMessageStore,
-} from "../../core/stores/messages/MessageStore";
+import useFriendListStore from "../../core/stores/friends/FriendListStore";
+import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
+import { formatLink } from "../../utils/formatLink";
 
 function Message() {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
   const { messages, addMessage, setMessages } = useMessageStore();
-  const [currFriend, setCurrFriend] = useState<Friend>();
+  const [currFriend, setCurrFriend] = useState<Friend | undefined>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
   const { register, handleSubmit, formState: { errors } } = useForm<Input>();
@@ -41,7 +39,7 @@ function Message() {
       fetchMessages(currFriend.userId)
         .then((res) => {
           setMessages([]);
-          setMessages(res.data)
+          setMessages(res.data);
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -57,12 +55,9 @@ function Message() {
           <h2 className="text-xl font-bold mb-4 sticky top-0 p-1">
             Friends List
           </h2>
-
           {friends.map((friend, index) => (
             <button
-              onClick={() => {
-                setCurrFriend(friend);
-              }}
+              onClick={() => setCurrFriend(friend)}
               key={index}
               className="bg-white w-full p-4 rounded mb-2 shadow flex items-center text-black hover:bg-gray-400 active:bg-gray-500"
             >
@@ -86,8 +81,10 @@ function Message() {
             {messages.map((message) => (
               <div key={message.id} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
               ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
-                {message.content}
-                <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">{message.sendAt?.slice(11, -8)}</p>
+                <div>{formatLink(message.content)}</div>
+                <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">
+                  {message.sendAt?.slice(11, -8)}
+                </p>
               </div>
             ))}
         </div>
