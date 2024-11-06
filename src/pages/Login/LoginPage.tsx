@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useUserStore } from "../utils/userStore";
+import { useUserStore } from "../../core/stores/user/UserStore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import { getUserData, loginUser } from "../../core/requests/auth/Login";
 
 function LoginPage() {
   const {
@@ -16,27 +17,17 @@ function LoginPage() {
 
   const onSubmit = async (data: { username: string; password: string }) => {
     try {
-      await axios.post(
-        "http://localhost:3000/auth/login",
-        data,
-        { withCredentials: true }
-      ).then((res) => {
-        if(res.status == 201) {
-          axios.get(
-            "http://localhost:3000/auth/me",
-            { withCredentials: true }
-          ).then(user => {
-            console.log(user)
-            setUser(user.data);
-            navigate("/dashboard");
-          });
-        } else {
-          setLoginError("Identifiants invalides, veuillez réessayer.");
-        }
-      })
+      const res = await loginUser(data);
+      if (res.status === 201) {
+        const user = await getUserData();
+        setUser(user.data);
+        navigate("/dashboard");
+      } else {
+        setLoginError("Identifiants invalides, veuillez réessayer.");
+      }
     } catch (error) {
       setLoginError("Identifiants invalides, veuillez réessayer.");
-      console.log(error)
+      console.error(error);
     }
   };
 

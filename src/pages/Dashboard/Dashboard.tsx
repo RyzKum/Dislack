@@ -1,11 +1,11 @@
-import Sidebar from '../components/SideBar';
-import { useEffect , useState } from "react";
+import Sidebar from "../../components/SideBar";
+import { useEffect, useState } from "react";
 import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
-import AddFriendPopup from '../components/AddFriendPop';
-import useFriendStore from "../utils/FriendListStore"
+import AddFriendPopup from "../../components/AddFriendPop";
+import useFriendStore from "../../core/stores/friends/FriendListStore";
 
 function Dashboard() {
-  const {friends, fetchFriends} = useFriendStore();
+  const { friends, fetchFriends } = useFriendStore();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const togglePopup = () => {
@@ -20,18 +20,26 @@ function Dashboard() {
     <div className="flex min-h-screen bg-[#633d68] text-white">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold mb-8">Welcome to the Dashboard, User 🖖 ! </h1>
+        <h1 className="text-3xl font-bold mb-8">
+          Welcome to the Dashboard, User 🖖 !{" "}
+        </h1>
         <div className="flex space-x-4">
           <div className="flex-1 bg-[#4a2c4a] p-4 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Friends List</h2>
-              <button onClick={togglePopup} className="bg-[#7a527a] p-2 rounded-full text-white font-bold">
+              <button
+                onClick={togglePopup}
+                className="bg-[#7a527a] p-2 rounded-full text-white font-bold"
+              >
                 Add Friend
               </button>
             </div>
             <ul>
-            {friends.map((friend, index) => (
-                <li key={index} className="flex items-center justify-between mb-2 p-2 bg-[#5a3c5a] rounded-lg">
+              {friends.map((friend, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-between mb-2 p-2 bg-[#5a3c5a] rounded-lg"
+                >
                   <div className="flex items-center">
                     <FaUserCircle className="mr-2 text-2xl" />
                     {friend.username}
@@ -54,7 +62,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      {isPopupVisible && <AddFriendPopup onClose={togglePopup}/>}
+      {isPopupVisible && <AddFriendPopup onClose={togglePopup} />}
     </div>
   );
 }

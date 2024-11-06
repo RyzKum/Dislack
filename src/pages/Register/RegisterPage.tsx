@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useUserStore } from "../utils/userStore";
+import { useUserStore } from "../../core/stores/user/UserStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
+import { registerUser } from "../../core/requests/auth/Register";
 
 interface FormData {
   username: string;
@@ -21,19 +21,11 @@ function RegisterPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
-        data
-      );
-      console.log(response)
-      console.log(response.data)
-      const newUser = response.data;
-
+      const newUser = await registerUser(data);
       setUser(newUser);
       navigate("/dashboard");
     } catch (error) {
-      setSubmitError("Erreur lors de l'inscription. Veuillez réessayer.");
-      console.log(error);
+      setSubmitError(error.message);
     }
   };
 

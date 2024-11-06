@@ -1,6 +1,6 @@
-import Sidebar from '../components/SideBar';
+import Sidebar from "../../components/SideBar";
 
-function Activity () {
+function Activity() {
   return (
     <div className="flex min-h-screen bg-[#633d68] text-white">
       <Sidebar />
@@ -9,6 +9,6 @@ function Activity () {
       </div>
     </div>
   );
-};
+}
 
 export default Activity;
