@@ -113,22 +113,13 @@ function Message() {
         </div>
 
         <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
-          {Array.from(messages.entries()).map(([uid, message]) => (
-            <div
-              key={uid}
-              className={`p-4 mx-2 min-w-28 w-fit rounded shadow mb-2
-              ${
-                message.emitterId == currUser?.id
-                  ? "bg-blue-300 ml-auto"
-                  : "bg-white mr-auto"
-              }`}
-            >
-              {message.content}
-              <p className="text-xs ml-auto">
-                {message.sendAt?.split("T", 2)[1].split(".")[0]}
-              </p>
-            </div>
-          ))}
+            {Array.from(messages.entries()).map(([uid, message]) => (
+              <div key={uid} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
+              ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
+                {message.content}
+                <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">{message.sendAt?.slice(11, -8)}</p>
+              </div>
+            ))}
         </div>
 
         <form
