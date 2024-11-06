@@ -8,11 +8,11 @@ import axios from "axios";
 import { Input } from "../../types/Input";
 
 function Message() {
-  const [messages] = useState<string[]>([]);
   const [input, setInput] = useState("");
+  const { messages, addMessage, setMessages } = useMessageStore();
   const [currFriend, setCurrFriend] = useState<Friend>();
   const currUser = useUserStore((state) => state.user);
-  const { friends, fetchFriends } = useFriendStore();
+  const { friends, fetchFriends } = useFriendListStore();
 
   const {
     register,
@@ -23,6 +23,54 @@ function Message() {
   useEffect(() => {
     fetchFriends();
   }, [fetchFriends]);
+
+  const handleSendMessage = () => {
+    if (input.trim()) {
+      const messageId = addMessage({ content: input, emitterId: currUser!.id });
+      axios
+        .post(
+          `http://localhost:3000/chat/${messageId}/send`,
+          { receiverId: currFriend!.userId, content: input },
+          { withCredentials: true }
+        )
+        .then((res) => {})
+        .catch((error) => {
+          console.error("Error sending message :", error);
+        });
+      setInput("");
+    }
+  };
+
+  useEffect(() => {
+    if (currFriend) {
+      axios
+        .get(`http://localhost:3000/messages/${currFriend.userId}`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          const fetchedMessages = new Map<string, MessageContent>();
+          console.log(response.data);
+          response.data.forEach(
+            (msg: {
+              id: string;
+              content: string;
+              emitterId: string;
+              sendAt: string;
+            }) => {
+              fetchedMessages.set(msg.id, {
+                content: msg.content,
+                emitterId: msg.emitterId,
+                sendAt: msg.sendAt,
+              });
+            }
+          );
+          setMessages(fetchedMessages);
+        })
+        .catch((error) => {
+          console.error("Fetching messages failed", error);
+        });
+    }
+  }, [currFriend, currUser, setMessages]);
 
   return (
     <div className="flex min-h-screen ">
@@ -37,6 +85,7 @@ function Message() {
             <button
               onClick={() => {
                 setCurrFriend(friend);
+                setMessages(new Map());
               }}
               key={index}
               className="bg-white w-full p-4 rounded mb-2 shadow flex items-center text-black hover:bg-gray-400 active:bg-gray-500"
@@ -57,23 +106,32 @@ function Message() {
           </h2>
         </div>
 
-        <div className="flex-1 overflow-y-auto mb-4">
-          {messages.map((message, index) => (
-            <div key={index} className="bg-white p-4 rounded shadow mb-2">
-              {message}
+        <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
+          {Array.from(messages.entries()).map(([uid, message]) => (
+            <div
+              key={uid}
+              className={`p-4 mx-2 min-w-28 w-fit rounded shadow mb-2
+              ${
+                message.emitterId == currUser?.id
+                  ? "bg-blue-300 ml-auto"
+                  : "bg-white mr-auto"
+              }`}
+            >
+              {message.content}
+              <p className="text-xs ml-auto">{message.sendAt}</p>
             </div>
           ))}
         </div>
 
         <form
-          onSubmit={handleSubmit(() => {
-            console.log("send");
-          })}
+          onSubmit={handleSubmit(handleSendMessage)}
           className="flex items-center p-2 bg-gray-100 rounded-xl border border-gray-300 shadow-sm m-3"
         >
           <input
             {...register("message", { required: true })}
             type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             className="flex-1 px-2 py-2 border-none outline-none bg-transparent placeholder-gray-500"
           />
           <label
