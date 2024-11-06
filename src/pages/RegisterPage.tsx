@@ -33,6 +33,7 @@ function RegisterPage() {
       navigate("/dashboard");
     } catch (error) {
       setSubmitError("Erreur lors de l'inscription. Veuillez réessayer.");
+      console.log(error);
     }
   };
 

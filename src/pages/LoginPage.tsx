@@ -16,19 +16,27 @@ function LoginPage() {
 
   const onSubmit = async (data: { username: string; password: string }) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/auth/login",
         data,
         { withCredentials: true }
-      );
-      console.log(response)
-      console.log(response.data)
-      const userData = response.data;
-
-      setUser(userData);
-      navigate("/dashboard");
+      ).then((res) => {
+        if(res.status == 201) {
+          axios.get(
+            "http://localhost:3000/auth/me",
+            { withCredentials: true }
+          ).then(user => {
+            console.log(user)
+            setUser(user.data);
+            navigate("/dashboard");
+          });
+        } else {
+          setLoginError("Identifiants invalides, veuillez réessayer.");
+        }
+      })
     } catch (error) {
       setLoginError("Identifiants invalides, veuillez réessayer.");
+      console.log(error)
     }
   };
 
