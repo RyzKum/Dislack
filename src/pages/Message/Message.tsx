@@ -4,18 +4,16 @@ import { FaUser, FaPaperPlane } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
 import { Input } from "../../types/Input";
-import useFriendListStore, {
-} from "../../core/stores/friends/FriendListStore";
-import {
-  useMessageStore,
-} from "../../core/stores/messages/MessageStore";
+import useFriendListStore from "../../core/stores/friends/FriendListStore";
+import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
+import { formatLink } from "../../utils/formatLink";
 
 function Message() {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
   const { messages, addMessage, setMessages } = useMessageStore();
-  const [currFriend, setCurrFriend] = useState<Friend>();
+  const [currFriend, setCurrFriend] = useState<Friend | undefined>();
   const currUser = useUserStore((state) => state.user);
   const { friends, fetchFriends } = useFriendListStore();
   const { register, handleSubmit } = useForm<Input>();
@@ -70,7 +68,6 @@ function Message() {
           <h2 className="text-xl font-bold mb-4 sticky top-0 p-1">
             Friends List
           </h2>
-
           {friends.map((friend, index) => (
             <button
               onClick={() => {
