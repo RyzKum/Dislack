@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { MessageType } from "../../../types/Message";
+
 interface MessageState {
   messages: MessageType[];
   addMessage: (content: string, emitterId: string) => string;
@@ -17,12 +18,13 @@ export const useMessageStore = create<MessageState>((set) => ({
       content: content,
       emitterId: id,
       sendAt: '',
+      sentStatus: 'loading'
     }
     set((state) => {
       const newMessages = state.messages;
       newMessages.push(newMessage);
       return { messages: newMessages }
-    });
+    }); 
     return uid;
   },
 

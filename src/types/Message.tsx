@@ -3,4 +3,5 @@ export type MessageType = {
   content: string;
   emitterId: string;
   sendAt: string;
+  sentStatus: string;
 }

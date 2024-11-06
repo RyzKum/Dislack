@@ -28,7 +28,21 @@ function Message() {
     if (input.trim()) {
       const messageId = addMessage(input, currUser!.id);
       try {
-        await sendMessage(messageId, currFriend!.userId, input); 
+        const msgIndex = messages.findIndex((msg) => msg.id == messageId)
+
+        await sendMessage(messageId, currFriend!.userId, input).then(
+          res => {
+            if(res.status == 201) {
+              messages[msgIndex].sentStatus = 'sent'
+              console.log('sent')
+            } else {
+              messages[msgIndex].sentStatus = 'error'
+              console.log(res)
+            }
+          }
+        ).catch(() =>
+          messages[msgIndex].sentStatus = 'error'
+        ); 
       } catch (error) {
         console.error("Error sending message:", error);
       }
@@ -40,14 +54,13 @@ function Message() {
     if (currFriend) {
       fetchMessages(currFriend.userId)
         .then((res) => {
-          setMessages([]);
-          setMessages(res.data.reverse)
+          setMessages(res.reverse())
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
         });
     }
-  }, [currFriend, currUser, setMessages]);
+  }, [currFriend, currUser, messages, setMessages]);
 
   return (
     <div className="flex min-h-screen ">
@@ -61,6 +74,9 @@ function Message() {
           {friends.map((friend, index) => (
             <button
               onClick={() => {
+                if(currFriend != friend) {
+                  setMessages([]);
+                }
                 setCurrFriend(friend);
               }}
               key={index}
@@ -83,14 +99,18 @@ function Message() {
         </div>
 
         <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
-            {messages.map((message) => (
+            {messages[0] != null ? messages.map((message) => (
               <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
               ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
-              ${message.sendAt != '' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white': 'bg-gray-400'}`}>
+              ${message.sentStatus == 'sent' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white' :
+              message.sentStatus == 'error' ? 'bg-red-300' : 'bg-gray-400'}`}>
                 {message.content}
-                <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">{message.sendAt != '' ? message.sendAt.slice(11, -8) : 'Loading'}</p>
+                <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">
+                  {message.sentStatus == 'sent' && message.sendAt != '' ? message.sendAt.slice(11, -8) :
+                  message.sentStatus == 'error' ? 'Error' : 'Loading'}
+                  </p>
               </div>
-            ))}
+            )) : <></>}
         </div>
 
         <form
