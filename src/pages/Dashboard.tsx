@@ -3,9 +3,11 @@ import { useEffect , useState } from "react";
 import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
 import AddFriendPopup from '../components/AddFriendPop';
 import useFriendStore from "../utils/FriendListStore"
+import useFriendRequestStore from '../utils/FriendPending';
 
 function Dashboard() {
   const {friends, fetchFriends} = useFriendStore();
+  const {friendRequests, fetchFriendsRequests, acceptRequest} = useFriendRequestStore();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const togglePopup = () => {
@@ -14,7 +16,8 @@ function Dashboard() {
 
   useEffect(() => {
     fetchFriends();
-  }, [fetchFriends]);
+    fetchFriendsRequests();
+  }, [fetchFriends, fetchFriendsRequests]);
 
   return (
     <div className="flex min-h-screen bg-[#633d68] text-white">
@@ -50,7 +53,19 @@ function Dashboard() {
           </div>
           <div className="w-1/4 bg-[#4a2c4a] p-4 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Activity</h2>
-            <p>New Activity ??</p>
+            {friendRequests.map((request, index) => (
+              <li key={index} className='flex item-center'>
+                <div className="flex items-center" >
+                  <FaUserCircle className="mr-2 text-2xl" />
+                  Request : {request.senderId}
+                </div>
+                <div className='flex items-center'>
+                  <button onClick={() => {acceptRequest(request.id)}} className="bg-[#7a527a] p-2 rounded-full text-white font-bold">
+                    Accept
+                  </button>
+                </div>
+              </li>
+            ))}
           </div>
         </div>
       </div>
