@@ -1,8 +1,8 @@
 import Sidebar from '../components/SideBar';
-import useFriendStore from "../utils/FriendListStore"
 import { useEffect , useState } from "react";
 import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
 import AddFriendPopup from '../components/AddFriendPop';
+import useFriendStore from "../utils/FriendListStore"
 
 function Dashboard() {
   const {friends, fetchFriends} = useFriendStore();
@@ -30,11 +30,11 @@ function Dashboard() {
               </button>
             </div>
             <ul>
-              {friends.map((friend, index) => (
+            {friends.map((friend, index) => (
                 <li key={index} className="flex items-center justify-between mb-2 p-2 bg-[#5a3c5a] rounded-lg">
                   <div className="flex items-center">
                     <FaUserCircle className="mr-2 text-2xl" />
-                    {friend}
+                    {friend.username}
                   </div>
                   <div className="flex items-center space-x-2">
                     <button className="bg-[#7a527a] p-2 rounded-full text-white font-bold">

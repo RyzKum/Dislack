@@ -1,18 +1,13 @@
 import Sidebar from "../components/SideBar";
 import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
-import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useStore } from "../utils/store";
+import useFriendStore from "../utils/FriendListStore"
+import axios from "axios";
 
 type Input = {
   receiverId: string
-}
-
-type Friend = {
-  userId: string,
-  username: string,
-  startedAt: string
 }
 
 type FriendRequest = {
@@ -24,9 +19,9 @@ type FriendRequest = {
 function Message() {
   const [messages] = useState<string[]>([]);
   const [input, setInput] = useState("");
-  const [friends, setFriends] = useState<Friend[]>([]);
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
   const currUser = useStore((state) => state.user);
+  const {friends, fetchFriends} = useFriendStore();
 
   const [hint, setHint] = useState<string>('');
   const {
@@ -36,14 +31,11 @@ function Message() {
   } = useForm<Input>();
 
   useEffect(() => {
-    axios.get('http://localhost:3000/social/friends', { withCredentials: true })
-      .then(response => {
-        setFriends(response.data);
-      })
-      .catch(error => {
-        console.error("Fetching friends not working :", error);
-      });
-    
+    fetchFriends();
+  }, [fetchFriends]);
+  
+
+  useEffect(() => {    
     axios.get('http://localhost:3000/social/friend-requests', { withCredentials: true })
       .then(response => {
         setFriendRequests(response.data);

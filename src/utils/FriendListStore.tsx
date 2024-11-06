@@ -1,8 +1,14 @@
 import { create } from 'zustand';
 import axios from "axios";
 
+interface Friend {
+  userId: string;
+  username: string;
+  startedAt: string;
+}
+
 interface FriendListStore {
-  friends: string[];
+  friends: Friend[];
   fetchFriends: () => void;
 }
 
@@ -10,10 +16,10 @@ export const useFriendListStore = create<FriendListStore>((set) => ({
   friends: [],
   fetchFriends: async () => {
     try {
-      const response = await axios.get("http://localhost:3000/social/friends");
+      const response = await axios.get('http://localhost:3000/social/friends', { withCredentials: true })
       set({ friends: response.data });
     } catch (error) {
-      console.error("Error fetch friends list");
+      console.error("Error fetching friends list", error);
     }
   },
 }));
