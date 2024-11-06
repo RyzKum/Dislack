@@ -8,7 +8,8 @@ import useFriendListStore from "../../core/stores/friends/FriendListStore";
 import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
-import { formatLink } from "../../utils/formatLink";
+import { AxiosError } from "axios";
+
 
 function Message() {
   const [input, setInput] = useState<string>("");
@@ -24,6 +25,7 @@ function Message() {
 
   const handleSendMessage = async () => {
     if (input.trim()) {
+      setInput("");
       const messageId = addMessage(input, currUser!.id);
       try {
         const msgIndex = messages.findIndex((msg) => msg.id == messageId)
@@ -32,21 +34,52 @@ function Message() {
           res => {
             if(res.status == 201) {
               messages[msgIndex].sentStatus = 'sent'
-              console.log('sent')
+              updateMessages();
             } else {
               messages[msgIndex].sentStatus = 'error'
-              console.log(res)
             }
           }
         ).catch(() =>
           messages[msgIndex].sentStatus = 'error'
         ); 
       } catch (error) {
-        console.error("Error sending message:", error);
+        console.log("Error sending message : " + (error as AxiosError).code);
       }
-      setInput("");
     }
   };
+
+  const resendMessage = async (messageId: string, content: string) => {
+    try {
+      const msgIndex = messages.findIndex((msg) => msg.id == messageId)
+      messages[msgIndex].sentStatus = 'loading'
+      await sendMessage(messageId, currFriend!.userId, content).then(
+        res => {
+          if(res.status == 201) {
+            messages[msgIndex].sentStatus = 'sent'
+            updateMessages();
+          } else {
+            messages[msgIndex].sentStatus = 'error'
+          }
+        }
+      ).catch(() =>
+        messages[msgIndex].sentStatus = 'error'
+      ); 
+    } catch (error) {
+      console.log("Error resending message : " + (error as AxiosError).code);
+    }
+  }
+
+  function updateMessages() {
+    if (currFriend) {
+      fetchMessages(currFriend.userId)
+        .then((res) => {
+          setMessages(res.reverse())
+        })
+        .catch((error) => {
+          console.error("Fetching messages failed", error);
+        });
+    }
+  }
 
   useEffect(() => {
     if (currFriend) {
@@ -97,16 +130,20 @@ function Message() {
 
         <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
             {messages[0] != null ? messages.map((message) => (
+              <>
               <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
               ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
               ${message.sentStatus == 'sent' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white' :
               message.sentStatus == 'error' ? 'bg-red-300' : 'bg-gray-400'}`}>
                 {message.content}
+                {message.sentStatus == 'error' ? 
+                <button onClick={() => {resendMessage(message.id, message.content)}} className="text-xs/[0px] mt-1 mr-4 text-gray-700 rounded-sm ml-auto p-2 bg-red-400 hover:bg-red-500 active:bg-red-400">Resend ?</button> :
                 <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">
                   {message.sentStatus == 'sent' && message.sendAt != '' ? message.sendAt.slice(11, -8) :
-                  message.sentStatus == 'error' ? 'Error' : 'Loading'}
-                  </p>
+                  message.sentStatus == 'loading' ? 'Loading' : ''}
+                </p>}
               </div>
+              </>
             )) : <></>}
         </div>
 
