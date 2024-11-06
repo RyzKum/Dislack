@@ -41,7 +41,7 @@ function Message() {
         setFriends(response.data);
       })
       .catch(error => {
-        console.error("Fetching friends not working ", error);
+        console.error("Fetching friends not working :", error);
       });
     
     axios.get('http://localhost:3000/social/friend-requests', { withCredentials: true })
@@ -49,17 +49,21 @@ function Message() {
         setFriendRequests(response.data);
       })
       .catch(error => {
-        console.error("Fetching friends-requests not working ", error);
+        console.error("Fetching friends-requests not working :", error);
       });
   }, []);
 
   const sendRequest: SubmitHandler<Input> = (data) => {
-    axios.post(`http://localhost:3000/social/friend-request/${currUser.id}`, data, { withCredentials: true })
+    if(currUser.id == data.receiverId) {
+      setHint("You can't add yourself !")
+    } else {
+      axios.post(`http://localhost:3000/social/friend-request/${currUser!.id}`, data, { withCredentials: true })
       .then(res => console.log("Send friend request: " + res.status))
       .catch(error => {
         setHint("Error occurred during friend request.")
         console.error("Error during friend request", error);
       });
+    }
   };
 
   function acceptRequest(id: string) {
