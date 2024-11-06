@@ -12,7 +12,7 @@ interface StoreState {
   setUser: (user: User | null) => void;
 }
 
-export const useStore = create<StoreState>((set) => ({
+export const useUserStore = create<StoreState>((set) => ({
   users: [],
   user: null,
   addUser: (user) => set((state) => ({ users: [...state.users, user] })),

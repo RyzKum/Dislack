@@ -3,13 +3,13 @@ import { FaHome, FaEnvelope, FaBell, FaRegClipboard } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useState, useEffect } from "react";
 import NotificationContainer from "./NotificationContainer";
-import { useStore } from '../utils/store';
+import { useUserStore } from '../utils/userStore';
 
 function Sidebar() {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<{ message: string, type: 'message' | 'friend_request' | 'request_accepted' }[]>([]);
-  const setUser = useStore((state) => state.setUser);
-  const currUser = useStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+  const currUser = useUserStore((state) => state.user);
   const [hint, setHint] = useState('Copy friend code :');
 
   const handleLogout = () => {

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useStore } from "../utils/store";
+import { useUserStore } from "../utils/userStore";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
@@ -10,7 +10,7 @@ function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<{ username: string; password: string }>();
-  const setUser = useStore((state) => state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState<string | null>(null);
 
