@@ -1,27 +1,34 @@
 import { create } from "zustand";
 
-export interface MessageContent {
+export type Message = {
+  id: string;
   content: string;
   emitterId: string;
   sendAt?: string;
 }
 
 interface MessageState {
-  messages: Map<string, MessageContent>;
-  addMessage: (content: MessageContent) => void;
-  setMessages: (newMessages: Map<string, MessageContent>) => void;
+  messages: Message[];
+  addMessage: (content: string, emitterId: string) => void;
+  setMessages: (newMessages: Message[]) => void;
   removeMessage: (uid: string) => void;
 }
 
 export const useMessageStore = create<MessageState>((set) => ({
-  messages: new Map(),
+  messages: [],
 
-  addMessage: (content) => {
+  addMessage: (content, id) => {
     const uid = crypto.randomUUID();
+    const newMessage: Message = {
+      id: uid,
+      content: content,
+      emitterId: id,
+      sendAt:  new Date().toDateString(),
+    }
     set((state) => {
-      const newMessages = new Map(state.messages);
-      newMessages.set(uid, content);
-      return { messages: newMessages };
+      const newMessages = state.messages;
+      newMessages.push(newMessage);
+      return { messages: newMessages }
     });
     return uid;
   },
@@ -30,8 +37,9 @@ export const useMessageStore = create<MessageState>((set) => ({
 
   removeMessage: (uid) =>
     set((state) => {
-      const newMessages = new Map(state.messages);
-      newMessages.delete(uid);
+      const newMessages = state.messages;
+      const index = newMessages.findIndex((e) => e.id == uid);
+      newMessages.splice(index, 1);
       return { messages: newMessages };
     }),
 }));

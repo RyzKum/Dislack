@@ -1,17 +1,14 @@
 import Sidebar from "../../components/SideBar";
 import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
 import axios from "axios";
 import { Input } from "../../types/Input";
 import useFriendListStore, {
   Friend,
 } from "../../core/stores/friends/FriendListStore";
-import {
-  MessageContent,
-  useMessageStore,
-} from "../../core/stores/messages/MessageStore";
+import { useMessageStore } from "../../core/stores/messages/MessageStore";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -32,7 +29,7 @@ function Message() {
 
   const handleSendMessage = () => {
     if (input.trim()) {
-      const messageId = addMessage({ content: input, emitterId: currUser!.id });
+      const messageId = addMessage(input, currUser!.id);
       axios
         .post(
           `http://localhost:3000/chat/${messageId}/send`,
@@ -54,23 +51,7 @@ function Message() {
           withCredentials: true,
         })
         .then((response) => {
-          const fetchedMessages = new Map<string, MessageContent>();
-          console.log(response.data);
-          response.data.forEach(
-            (msg: {
-              id: string;
-              content: string;
-              emitterId: string;
-              sendAt: string;
-            }) => {
-              fetchedMessages.set(msg.id, {
-                content: msg.content,
-                emitterId: msg.emitterId,
-                sendAt: msg.sendAt,
-              });
-            }
-          );
-          setMessages(fetchedMessages);
+          setMessages(response.data);
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -90,8 +71,8 @@ function Message() {
           {friends.map((friend, index) => (
             <button
               onClick={() => {
+                setMessages([]);
                 setCurrFriend(friend);
-                setMessages(new Map());
               }}
               key={index}
               className="bg-white w-full p-4 rounded mb-2 shadow flex items-center text-black hover:bg-gray-400 active:bg-gray-500"
@@ -113,8 +94,8 @@ function Message() {
         </div>
 
         <div className="flex-1 flex flex-col w-full overflow-y-auto mb-4">
-            {Array.from(messages.entries()).map(([uid, message]) => (
-              <div key={uid} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
+            {messages.map((message) => (
+              <div key={message.id} className={`pl-4 py-4 mx-2 min-w-28 w-fit rounded shadow mb-2 flex flex-col
               ${message.emitterId == currUser?.id ? 'bg-blue-300 ml-auto' : 'bg-white mr-auto'}`}>
                 {message.content}
                 <p className="text-xs/[0px] my-[-2px] mr-2 ml-auto">{message.sendAt?.slice(11, -8)}</p>
