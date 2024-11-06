@@ -51,7 +51,7 @@ function Message() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/messages/${currUser!.id}`, {
+      .get(`http://localhost:3000/messages/${currFriend?.userId}`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -99,13 +99,13 @@ function Message() {
           </h2>
         </div>
 
-        {/*<div className="flex-1 overflow-y-auto mb-4">
-          {messages.map((message, index) => (
-            <div key={index} className="bg-white p-4 rounded shadow mb-2">
-              {message}
-            </div>
-          ))}
-        </div>*/}
+        <div className="flex-1 overflow-y-auto mb-4">
+            {Array.from(messages.entries()).map(([uid, message]) => (
+              <div key={uid} className="bg-white p-4 rounded shadow mb-2">
+                {message}
+              </div>
+            ))}
+        </div>
 
         <form
           onSubmit={handleSubmit(handleSendMessage)}

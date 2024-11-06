@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { create } from "zustand";
 
 interface MessageState {
@@ -12,7 +11,7 @@ export const useMessageStore = create<MessageState>((set) => ({
   messages: new Map(),
 
   addMessage: (content) => {
-    const uid = nanoid();
+    const uid = crypto.randomUUID();
     set((state) => {
       const newMessages = new Map(state.messages);
       newMessages.set(uid, content);
