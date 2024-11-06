@@ -1,7 +1,7 @@
 import React from 'react';
 import { SubmitHandler, useForm } from "react-hook-form";
 import useAddFriendStore from '../utils/AddFriendStore';
-import {useStore} from '../utils/store';
+import {useUserStore} from '../utils/userStore';
 
 interface AddFriendPopupProps {
     onClose: () => void;
@@ -14,7 +14,7 @@ type Input = {
 const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Input>();
     const { sendRequest, hint , setHint} = useAddFriendStore();
-    const currUser = useStore((state) => state.user);
+    const currUser = useUserStore((state) => state.user);
 
     const onSubmit : SubmitHandler<Input> = (data) => {
         if (currUser) {
