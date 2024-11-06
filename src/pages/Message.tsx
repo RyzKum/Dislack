@@ -20,6 +20,7 @@ function Message() {
   const [messages] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
+  const [currFriend, setCurrFriend] = useState<Friend>();
   const currUser = useStore((state) => state.user);
   const {friends, fetchFriends} = useFriendStore();
 
@@ -50,7 +51,11 @@ function Message() {
       setHint("You can't add yourself !")
     } else {
       axios.post(`http://localhost:3000/social/friend-request/${currUser!.id}`, data, { withCredentials: true })
-      .then(res => console.log("Send friend request: " + res.status))
+      .then(res => {
+        if(res.status == 201) {
+          setHint("Friend request sent !");
+        }
+      })
       .catch(error => {
         setHint("Error occurred during friend request.")
         console.error("Error during friend request", error);
@@ -81,7 +86,9 @@ function Message() {
               <div className="w-10 h-10 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
                 <FaUser className="text-gray-500" />
               </div>
-              {friend.username}
+              <button onClick={() => {setCurrFriend(friend)}} className="hover:bg-gray-400 active:bg-gray-500">
+                {friend.username}
+              </button>
             </div>
           ))}
           </div>
@@ -110,7 +117,7 @@ function Message() {
         
         <div className="flex-1 bg-gray-100 flex flex-col">
           <div className="bg-white p-4 mb-4">
-            <h2 className="text-2xl font-bold">Friend</h2>
+            <h2 className="text-2xl font-bold">{currFriend ? currFriend.username : 'Friend'}</h2>
           </div>
 
           <div className="flex-1 overflow-y-auto mb-4">
@@ -121,21 +128,23 @@ function Message() {
             ))}
           </div>
 
-          <div className="flex items-center p-2 bg-gray-100 rounded-xl border border-gray-300 shadow-sm m-3">
+          <form onSubmit={handleSubmit(() => {console.log("send")})} className="flex items-center p-2 bg-gray-100 rounded-xl border border-gray-300 shadow-sm m-3">
             <input
               type="text"
               className="flex-1 px-2 py-2 border-none outline-none bg-transparent placeholder-gray-500"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
-            <button
+            <label
+              htmlFor="send"
               className={`p-4 ml-2 rounded-lg ${
-                input ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-500"
+                input ? "bg-blue-500 text-white cursor-pointer" : "bg-gray-200 text-gray-500 cursor-default"
               }`}
             >
               <FaPaperPlane size={16} />
-            </button>
-          </div>
+            </label>
+            <input type="submit" name="send" id="send" className="hidden"></input>
+          </form>
         </div>
       </div>
   );
