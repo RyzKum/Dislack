@@ -1,9 +1,9 @@
 import Sidebar from "../../components/SideBar";
 import { useEffect, useState } from "react";
 import { FaUserCircle, FaEllipsisH, FaEnvelope } from "react-icons/fa";
-import AddFriendPopup from "../components/AddFriendPop";
-import useFriendStore from "../utils/FriendListStore";
-import useFriendRequestStore from "../utils/FriendPending";
+import AddFriendPopup from "../../components/AddFriendPop";
+import useFriendStore from "../../core/stores/friends/FriendListStore";
+import useFriendRequestStore from "../../utils/FriendPending";
 
 function Dashboard() {
   const { friends, fetchFriends } = useFriendStore();

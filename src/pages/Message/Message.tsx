@@ -3,9 +3,15 @@ import { useState, useEffect } from "react";
 import { FaUser, FaPaperPlane } from "react-icons/fa";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
-import useFriendStore from "../../core/stores/friends/FriendListStore";
 import axios from "axios";
 import { Input } from "../../types/Input";
+import useFriendListStore, {
+  Friend,
+} from "../../core/stores/friends/FriendListStore";
+import {
+  MessageContent,
+  useMessageStore,
+} from "../../core/stores/messages/MessageStore";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -118,7 +124,9 @@ function Message() {
               }`}
             >
               {message.content}
-              <p className="text-xs ml-auto">{message.sendAt}</p>
+              <p className="text-xs ml-auto">
+                {message.sendAt?.split("T", 2)[1].split(".")[0]}
+              </p>
             </div>
           ))}
         </div>
