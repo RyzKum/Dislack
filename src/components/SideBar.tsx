@@ -3,12 +3,13 @@ import { useStore } from '../utils/store';
 import { FaHome, FaEnvelope, FaBell } from 'react-icons/fa';
 import { CiLogout } from 'react-icons/ci';
 import { FaRegClipboard } from "react-icons/fa";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function Sidebar() {
   const navigate = useNavigate();
   const setUser = useStore((state) => state.setUser);
   const currUser = useStore((state) => state.user);
+  const [hint, setHint] = useState('Copy friend code :');
 
   const handleLogout = () => {
     setUser(null);
@@ -16,7 +17,9 @@ function Sidebar() {
   };
 
   const copyCode = () => {
-    console.log('code')
+    navigator.clipboard.writeText(currUser!.id);
+    setHint("Copied !");
+    setTimeout(() => {setHint("Copy friend code :")}, 3000);
   }
 
   useEffect(() => {
@@ -42,12 +45,15 @@ function Sidebar() {
             <span className="mt-1">Activity</span>
           </Link>
         </nav>
-        <button
-          onClick={copyCode}
-          className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"
-        >
-          <FaRegClipboard size={20} />
-        </button>
+        <div className='flex flex-col justify-center items-center mb-2'>
+          <p className='text-xs mb-1 px-1 text-wrap text-center'>{hint}</p>
+          <button
+            onClick={copyCode}
+            className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-500 active:bg-purple-400"
+          >
+            <FaRegClipboard size={20} />
+          </button>
+        </div>
         <button
           onClick={handleLogout}
           className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-700"
