@@ -5,13 +5,12 @@ import { useForm } from "react-hook-form";
 import { useUserStore } from "../../core/stores/user/UserStore";
 import { Input } from "../../types/Input";
 import useFriendListStore, {
-  Friend,
 } from "../../core/stores/friends/FriendListStore";
 import {
-  MessageContent,
   useMessageStore,
 } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
+import { Friend } from "../../types/Friend";
 
 function Message() {
   const [input, setInput] = useState("");
@@ -27,7 +26,7 @@ function Message() {
 
   const handleSendMessage = async () => {
     if (input.trim()) {
-      const messageId = addMessage({ content: input, emitterId: currUser!.id });
+      const messageId = addMessage(input, currUser!.id);
       try {
         await sendMessage(messageId, currFriend!.userId, input); 
       } catch (error) {
@@ -39,17 +38,10 @@ function Message() {
 
   useEffect(() => {
     if (currFriend) {
-      fetchMessages(currFriend.userId) 
-        .then((data) => {
-          const fetchedMessages = new Map<string, MessageContent>();
-          data.forEach((msg) => {
-            fetchedMessages.set(msg.id, {
-              content: msg.content,
-              emitterId: msg.emitterId,
-              sendAt: msg.sendAt,
-            });
-          });
-          setMessages(fetchedMessages);
+      fetchMessages(currFriend.userId)
+        .then((res) => {
+          setMessages([]);
+          setMessages(res.data)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -69,7 +61,6 @@ function Message() {
           {friends.map((friend, index) => (
             <button
               onClick={() => {
-                setMessages([]);
                 setCurrFriend(friend);
               }}
               key={index}

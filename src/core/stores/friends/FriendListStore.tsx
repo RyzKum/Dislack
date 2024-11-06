@@ -1,11 +1,6 @@
 import { create } from 'zustand';
 import axios from "axios";
-
-export interface Friend {
-  userId: string;
-  username: string;
-  startedAt: string;
-}
+import { Friend } from '../../../types/Friend';
 
 interface FriendListStore {
   friends: Friend[];

@@ -4,19 +4,19 @@ import { useState } from "react";
 import { registerUser } from "../../core/requests/auth/Register";
 import { getUserData, loginUser } from "../../core/requests/auth/Login";
 import { useUserStore } from "../../core/stores/user/UserStore";
-import { FormData } from "../../types/FormData";
+import { RegisterData } from "../../types/FormData";
 
 function RegisterPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<RegisterData>();
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const setUser = useUserStore((state) => state.setUser);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: RegisterData) => {
     try {
       registerUser(data).then((res) => {
         console.log(res);
