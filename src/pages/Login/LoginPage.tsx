@@ -3,6 +3,7 @@ import { useUserStore } from "../../core/stores/user/UserStore";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { getUserData, loginUser } from "../../core/requests/auth/Login";
+import { AxiosError } from "axios";
 
 function LoginPage() {
   const {
@@ -25,8 +26,14 @@ function LoginPage() {
         setLoginError("Identifiants invalides, veuillez réessayer.");
       }
     } catch (error) {
-      setLoginError("Identifiants invalides, veuillez réessayer.");
-      console.error(error);
+      const err = (error as AxiosError);
+
+      if(err.code == "ERR_NETWORK") {
+        setLoginError("500 Network Error, try again later.");
+      } else {
+        setLoginError("Invalid credentials, try again.");
+      }
+      
     }
   };
 
