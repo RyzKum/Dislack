@@ -54,7 +54,7 @@ function Message() {
   }, []);
 
   const sendRequest: SubmitHandler<Input> = (data) => {
-    if(currUser.id == data.receiverId) {
+    if(currUser!.id == data.receiverId) {
       setHint("You can't add yourself !")
     } else {
       axios.post(`http://localhost:3000/social/friend-request/${currUser!.id}`, data, { withCredentials: true })
@@ -74,23 +74,24 @@ function Message() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen ">
       <Sidebar />
-      <div className="flex-1 flex">
+      <div className="flex-1 flex border-sm ">
 
-        <div className="w-1/4 bg-gray-200 p-4 overflow-y-auto h-screen flex flex-col justify-between">
-          <div>
-            <h2 className="text-xl font-bold mb-4 sticky top-0 bg-gray-200 p-4">Friends</h2>
-            <div>
-              {friends.map((friend, index) => (
-                <div key={index} className="bg-white p-4 rounded mb-2 shadow flex items-center">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
-                    <FaUser className="text-gray-500" />
-                  </div>
-                  {friend.username}
-                </div>
-              ))}
+        <div className="w-1/4 bg-[#633d68] text-white p-4 overflow-y-auto">
+          <h2 className="text-xl font-bold mb-4 sticky top-0 p-1">Friends List</h2>
+
+          {friends.map((friend, index) => (
+            <div
+              key={index}
+              className="bg-white p-4 rounded mb-2 shadow flex items-center"
+            >
+              <div className="w-10 h-10 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                <FaUser className="text-gray-500" />
+              </div>
+              {friend.username}
             </div>
+          ))}
           </div>
           <div>
             <h2 className="text-xl font-bold mb-4 sticky top-0 bg-gray-200 p-4">Friends Requests</h2>
@@ -116,7 +117,6 @@ function Message() {
         </div>
         
         <div className="flex-1 bg-gray-100 flex flex-col">
-
           <div className="bg-white p-4 mb-4">
             <h2 className="text-2xl font-bold">Friend</h2>
           </div>
@@ -144,10 +144,8 @@ function Message() {
               <FaPaperPlane size={16} />
             </button>
           </div>
-
         </div>
       </div>
-    </div>
   );
 }
 
