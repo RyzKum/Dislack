@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import axios from "axios";
 import { FriendRequest } from "../../../types/FriendRequest";
 import { acceptFriendRequest, fetchFriendRequests } from "../../requests/friend/Friend";
 interface FriendRequestStore {

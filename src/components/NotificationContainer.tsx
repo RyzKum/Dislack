@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNotifications } from "../core/requests/notification/Notification";
 import { useNotificationStore } from "../core/stores/notification/NotificationStore";
 import message from "../assets/message.mp3";

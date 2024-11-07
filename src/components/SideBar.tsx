@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaEnvelope, FaBell, FaRegClipboard } from "react-icons/fa";
+import { FaHome, FaEnvelope, FaRegClipboard } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useState, useEffect } from "react";
 import { useUserStore } from "../core/stores/user/UserStore";
 import NotificationContainer from "./NotificationContainer";
-import { User } from "../types/User";
 
 function Sidebar() {
   const navigate = useNavigate();
