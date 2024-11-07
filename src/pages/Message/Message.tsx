@@ -9,6 +9,7 @@ import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
 import { AxiosError } from "axios";
+import { formatLink } from "../../utils/formatLink";
 
 
 function Message() {
@@ -135,7 +136,7 @@ function Message() {
               ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
               ${message.sentStatus == 'sent' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white' :
               message.sentStatus == 'error' ? 'bg-red-300' : 'bg-gray-400'}`}>
-                {message.content}
+                <div>{formatLink(message.content)}</div>
                 {message.sentStatus == 'error' ? 
                 <button onClick={() => {resendMessage(message.id, message.content)}} className="text-xs/[0px] mt-1 mr-4 text-gray-700 rounded-sm ml-auto p-2 bg-red-400 hover:bg-red-500 active:bg-red-400">Resend ?</button> :
                 <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">
