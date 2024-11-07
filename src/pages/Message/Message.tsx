@@ -21,7 +21,10 @@ function Message() {
 
   useEffect(() => {
     fetchFriends();
-  }, [fetchFriends]);
+    if(friends && currFriend == undefined) {
+      setCurrFriend(friends[0]);
+    }
+  }, [currFriend, fetchFriends, friends]);
 
   const handleSendMessage = async () => {
     if (input.trim()) {
@@ -73,7 +76,7 @@ function Message() {
     if (currFriend) {
       fetchMessages(currFriend.userId)
         .then((res) => {
-          setMessages(res.reverse())
+          setMessages(res)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -85,7 +88,7 @@ function Message() {
     if (currFriend) {
       fetchMessages(currFriend.userId)
         .then((res) => {
-          setMessages(res.reverse())
+          setMessages(res)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -94,7 +97,7 @@ function Message() {
   }, [currFriend, currUser, messages, setMessages]);
 
   return (
-    <div className="flex min-h-screen ">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex border-sm w-1/5">
         <div className="bg-[#633d68] text-white p-4 overflow-y-auto w-full">
@@ -121,14 +124,14 @@ function Message() {
         </div>
       </div>
 
-      <div className="flex-1 bg-gray-100 flex flex-col">
-        <div className="bg-white p-4 mb-4">
+      <div className="flex-1 bg-gray-100 flex flex-col h-screen">
+        <div className="bg-white p-4">
           <h2 className="text-2xl font-bold">
             {currFriend ? currFriend.username : "Friend"}
           </h2>
         </div>
 
-        <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
+        <div className="flex flex-1 flex-col-reverse w-full py-4 overflow-y-scroll">
             {messages[0] != null ? messages.map((message) => (
               <>
               <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
