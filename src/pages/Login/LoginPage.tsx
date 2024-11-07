@@ -21,6 +21,7 @@ function LoginPage() {
       if (res.status === 201) {
         const user = await getUserData();
         setUser(user.data);
+        localStorage.setItem('user', JSON.stringify(user.data));
         navigate("/dashboard");
       } else {
         setLoginError("Identifiants invalides, veuillez réessayer.");
