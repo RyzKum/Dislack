@@ -24,6 +24,7 @@ function RegisterPage() {
           if (res.status === 201) {
             const user = await getUserData();
             setUser(user.data);
+            localStorage.setItem('user', JSON.stringify(user.data));
             navigate("/dashboard");
           } else {
             setSubmitError("Error during log in, try again.");

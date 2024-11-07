@@ -23,9 +23,10 @@ function Message() {
   useEffect(() => {
     fetchFriends();
     if(friends && currFriend == undefined) {
+      setMessages([]);
       setCurrFriend(friends[0]);
     }
-  }, [currFriend, fetchFriends, friends]);
+  }, [currFriend, fetchFriends, friends, setMessages]);
 
   const handleSendMessage = async () => {
     if (input.trim()) {
