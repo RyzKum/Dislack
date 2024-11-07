@@ -17,9 +17,21 @@ function Dashboard() {
     setIsPopupVisible(!isPopupVisible);
   };
 
+  const handleAcceptRequest = async (requestId: string) => {
+    await acceptRequest(requestId);
+    fetchFriends();
+  };
+
   useEffect(() => {
     fetchFriends();
     fetchFriendsRequests();
+
+    const interval = setInterval(() => {
+      fetchFriends();
+      fetchFriendsRequests();
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, [fetchFriends, fetchFriendsRequests]);
 
   return (
@@ -64,24 +76,27 @@ function Dashboard() {
           </div>
           <div className="w-1/4 bg-[#4a2c4a] p-4 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Activity</h2>
-            {friendRequests.map((request, index) => (
-              <li key={index} className="flex item-center">
-                <div className="flex items-center">
-                  <FaUserCircle className="mr-2 text-2xl" />
-                  Request : {request.senderId}
-                </div>
-                <div className="flex items-center">
-                  <button
-                    onClick={() => {
-                      acceptRequest(request.id);
-                    }}
-                    className="bg-[#7a527a] p-2 rounded-full text-white font-bold"
-                  >
-                    Accept
-                  </button>
-                </div>
-              </li>
-            ))}
+            <ul>
+              {friendRequests.map((request, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-between mb-2 p-2 bg-[#5a3c5a] rounded-lg"
+                >
+                  <div className="flex items-center">
+                    <FaUserCircle className="mr-2 text-2xl" />
+                    Request: {request.senderId}
+                  </div>
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => handleAcceptRequest(request.id)}
+                      className="bg-[#7a527a] p-2 rounded-full text-white font-bold"
+                    >
+                      Accept
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNotifications } from "../core/requests/notification/Notification";
 import { useNotificationStore } from "../core/stores/notification/NotificationStore";
 import message from "../assets/message.mp3";
@@ -9,6 +9,24 @@ const NotificationContainer = () => {
   const notifications = useNotificationStore((state) => state.notifications);
   const removeNotification = useNotificationStore((state) => state.removeNotification);
   const [removing, setRemoving] = useState<number[]>([]);
+
+
+// Pour les notifications persistantes (qui ne disparaissent pas automatiquement) : 5 secondes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      notifications.forEach((notification) => {
+        if (!removing.includes(notification.id)) {
+          setRemoving((prev) => [...prev, notification.id]);
+          setTimeout(() => {
+            removeNotification(notification.id);
+            setRemoving((prev) => prev.filter((removingId) => removingId !== notification.id));
+          }, 500);
+        }
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [notifications, removing, removeNotification]);
 
   const playSound = (eventType: string) => {
     let soundUrl = "";
@@ -59,7 +77,7 @@ const NotificationContainer = () => {
           </div>
           <div className="mt-1">
             {notification.eventType === "friend-request-received" && (
-              <div>User ID: {notification.data.userId}</div>
+              <div>User ID: {notification.data.senderId}</div>
             )}
             {notification.eventType === "friend-request-accepted" && (
               <div>Sender ID: {notification.data.userId}</div>
