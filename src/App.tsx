@@ -10,7 +10,6 @@ import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Message from "./pages/Message/Message";
-import Activity from "./pages/Activity/Activity";
 
 function Home() {
   const navigate = useNavigate();
@@ -56,7 +55,6 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/message" element={<Message />} />
-        <Route path="/activity" element={<Activity />} />
       </Routes>
     </Router>
   );

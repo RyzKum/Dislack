@@ -55,19 +55,11 @@ function Sidebar() {
             <FaEnvelope size={24} />
             <span className="mt-1">Messages</span>
           </Link>
-          <Link
-            to="/activity"
-            className="flex flex-col items-center text-sm hover:text-gray-300"
-          >
-            <FaBell size={24} />
-            <span className="mt-1">Activity</span>
-          </Link>
         </nav>
         <div className="flex flex-col justify-center items-center mb-2">
-          <p className="text-xs mb-6 px-1 text-wrap text-center">
+          {/* <p className="text-xs mb-6 px-1 text-wrap text-center">
             Currently logged in as: {currUser?.username}
-          </p>
-
+          </p> */}
           <p className="text-xs mb-1 px-1 text-wrap text-center">{hint}</p>
           <button
             onClick={copyCode}
