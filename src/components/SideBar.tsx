@@ -3,6 +3,7 @@ import { FaHome, FaEnvelope, FaBell, FaRegClipboard } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useState, useEffect } from "react";
 import { useUserStore } from "../core/stores/user/UserStore";
+import { User } from "../types/User";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function Sidebar() {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.setItem('user', '');
     navigate("/login");
   };
 
@@ -30,10 +32,15 @@ function Sidebar() {
   };
 
   useEffect(() => {
-    if (currUser == null) {
-      navigate("/login");
+    if(currUser == null) {
+      const localUser = localStorage.getItem('user');
+      if(localUser == '' || localUser == null) {
+        navigate("/login");
+      } else {
+        setUser(JSON.parse(localUser!));
+      }
     }
-  }, [currUser, navigate]);
+  }, [currUser, navigate, setUser]);
 
   return (
     <div className="flex min-h-screen">
