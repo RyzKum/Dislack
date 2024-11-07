@@ -62,7 +62,7 @@ const NotificationContainer = () => {
               <div>User ID: {notification.data.userId}</div>
             )}
             {notification.eventType === "friend-request-accepted" && (
-              <div>Sender ID: {notification.data.senderId}</div>
+              <div>Sender ID: {notification.data.userId}</div>
             )}
             {notification.eventType === "message-received" && (
               <>
