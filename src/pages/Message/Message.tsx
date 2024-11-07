@@ -9,6 +9,7 @@ import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
 import { AxiosError } from "axios";
+import { formatLink } from "../../utils/formatLink";
 
 
 function Message() {
@@ -21,7 +22,10 @@ function Message() {
 
   useEffect(() => {
     fetchFriends();
-  }, [fetchFriends]);
+    if(friends && currFriend == undefined) {
+      setCurrFriend(friends[0]);
+    }
+  }, [currFriend, fetchFriends, friends]);
 
   const handleSendMessage = async () => {
     if (input.trim()) {
@@ -73,7 +77,7 @@ function Message() {
     if (currFriend) {
       fetchMessages(currFriend.userId)
         .then((res) => {
-          setMessages(res.reverse())
+          setMessages(res)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -85,7 +89,7 @@ function Message() {
     if (currFriend) {
       fetchMessages(currFriend.userId)
         .then((res) => {
-          setMessages(res.reverse())
+          setMessages(res)
         })
         .catch((error) => {
           console.error("Fetching messages failed", error);
@@ -94,7 +98,7 @@ function Message() {
   }, [currFriend, currUser, messages, setMessages]);
 
   return (
-    <div className="flex min-h-screen ">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex border-sm w-1/5">
         <div className="bg-[#633d68] text-white p-4 overflow-y-auto w-full">
@@ -121,21 +125,21 @@ function Message() {
         </div>
       </div>
 
-      <div className="flex-1 bg-gray-100 flex flex-col">
-        <div className="bg-white p-4 mb-4">
+      <div className="flex-1 bg-gray-100 flex flex-col h-screen">
+        <div className="bg-white p-4">
           <h2 className="text-2xl font-bold">
             {currFriend ? currFriend.username : "Friend"}
           </h2>
         </div>
 
-        <div className="flex-1 flex flex-col w-full overflow-y-clip mb-4">
+        <div className="flex flex-1 flex-col-reverse w-full py-4 overflow-y-scroll">
             {messages[0] != null ? messages.map((message) => (
               <>
               <div key={message.id} className={`px-4 py-4 mx-2 min-w-28 max-w-96 w-fit rounded shadow mb-2 flex flex-col text-wrap
               ${message.emitterId == currUser?.id ? 'ml-auto' : 'mr-auto'}
               ${message.sentStatus == 'sent' ? message.emitterId == currUser?.id ? 'bg-blue-300' : 'bg-white' :
               message.sentStatus == 'error' ? 'bg-red-300' : 'bg-gray-400'}`}>
-                {message.content}
+                <div>{formatLink(message.content)}</div>
                 {message.sentStatus == 'error' ? 
                 <button onClick={() => {resendMessage(message.id, message.content)}} className="text-xs/[0px] mt-1 mr-4 text-gray-700 rounded-sm ml-auto p-2 bg-red-400 hover:bg-red-500 active:bg-red-400">Resend ?</button> :
                 <p className="text-xs/[0px] mt-2 text-gray-700 ml-auto">
