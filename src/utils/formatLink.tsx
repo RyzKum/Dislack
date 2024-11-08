@@ -1,6 +1,6 @@
 import React from "react";
 
-export const formatLink = (text: string): (string | JSX.Element)[] => {
+export const FormatLink = (text: string): (string | JSX.Element)[] => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.split(urlRegex).map((part, index) =>
     urlRegex.test(part) ? (
