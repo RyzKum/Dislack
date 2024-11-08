@@ -9,7 +9,7 @@ import { useMessageStore } from "../../core/stores/messages/MessageStore";
 import { fetchMessages, sendMessage } from "../../core/requests/message/Message";
 import { Friend } from "../../types/Friend";
 import { AxiosError } from "axios";
-import { FormatLink } from "../../utils/FormatLink";
+import { FormatLink } from "../../utils/formatLink";
 
 
 function Message() {
