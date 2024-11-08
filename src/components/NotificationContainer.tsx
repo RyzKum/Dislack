@@ -48,7 +48,7 @@ const NotificationContainer = () => {
   };
 
   useNotifications((eventType, data) => {
-    console.log(`Adding notification: ${eventType}`, data);
+    // console.log(`Adding notification: ${eventType}`, data);
     const id = Date.now();
     useNotificationStore.getState().addNotification(eventType, { id, ...data });
     playSound(eventType);
@@ -57,11 +57,11 @@ const NotificationContainer = () => {
       setTimeout(() => {
         removeNotification(id);
         setRemoving((prev) => prev.filter((removingId) => removingId !== id));
-      }, 500); // Duration of the slide-out animation
+      }, 500);
     }, 2000);
   });
 
-  console.log("Rendering NotificationContainer with notifications:", notifications);
+  // console.log("Rendering NotificationContainer with notifications:", notifications);
 
   return (
     <div className="fixed top-0 right-0 m-4 space-y-4">
