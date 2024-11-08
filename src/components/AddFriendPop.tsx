@@ -43,7 +43,7 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
               className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
             />
           </div>
-          <p className="mb-3 text-red-500">{hint && <span>{hint}</span>}</p>
+          <p className={`mb-4 ${hint == 'Friend request sent !' ? 'text-green-400' : 'text-red-500'}`}>{hint && <span>{hint}</span>}</p>
           <div className="flex justify-between">
             <button
               onClick={onClose}

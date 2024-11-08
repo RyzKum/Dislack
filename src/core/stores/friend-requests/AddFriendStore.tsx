@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { sendFriendRequest } from '../../requests/friend/Friend';
 
 interface AddFriendStore {
@@ -15,11 +15,18 @@ export const useAddFriendStore = create<AddFriendStore>((set) => ({
       set({ hint: "You can't add yourself!" });
     } else {
       try {
-        const status = await sendFriendRequest(currUserId, receiverId);
-        console.log("Send friend request: " + status);
-        set({ hint: '' });
+        await sendFriendRequest(currUserId, receiverId).then(
+          status => {
+            console.log("Send friend request: " + status);
+            if(status == 201) {
+              set({ hint: 'Friend request sent !' });
+            } else {
+              set({ hint: 'Error occurred during friend request. ERR_' + status });
+            }
+          }
+        );
       } catch (error) {
-        set({ hint: "Error occurred during friend request." });
+        set({ hint: "Error occurred during friend request: " + (error as AxiosError).code});
         console.error("Error during friend request", error);
       }
     }
