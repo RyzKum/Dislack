@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const useNotifications = (onNotification: (eventType: string, data: any) => void) => {
+export const useNotifications = (onNotification: (eventType: string, data: unknown) => void) => {
   useEffect(() => {
     const eventSource = new EventSource(`${API_URL}/notifications`, { withCredentials: true });
 

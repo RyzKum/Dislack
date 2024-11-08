@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { sendFriendRequest } from '../../requests/friend/Friend';
 
 interface AddFriendStore {

@@ -15,9 +15,8 @@ const AddFriendPopup: React.FC<AddFriendPopupProps> = ({ onClose }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm<Input>();
-  const { sendRequest, hint, setHint } = useAddFriendStore();
+  const { sendRequest, hint } = useAddFriendStore();
   const currUser = useUserStore((state) => state.user);
 
   const onSubmit: SubmitHandler<Input> = (data) => {
