@@ -80,13 +80,12 @@ function Dashboard() {
               {friendRequests.map((request, index) => (
                 <li
                   key={index}
-                  className="flex items-center justify-between mb-2 p-2 bg-[#5a3c5a] rounded-lg"
+                  className="flex items-center mb-2 p-2 bg-[#5a3c5a] rounded-lg"
                 >
-                  <div className="flex items-center">
-                    <FaUserCircle className="mr-2 text-2xl" />
-                    Request: {request.senderId}
+                  <div className="flex items-center w-3/5">
+                    <p className="truncate">Request: {request.senderId}</p>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center ml-4">
                     <button
                       onClick={() => handleAcceptRequest(request.id)}
                       className="bg-[#7a527a] p-2 rounded-full text-white font-bold"
