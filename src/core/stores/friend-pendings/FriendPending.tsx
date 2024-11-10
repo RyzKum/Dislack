@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { FriendRequest } from "../../../types/FriendRequest";
 import { acceptFriendRequest, fetchFriendRequests } from "../../requests/friend/Friend";
+
 interface FriendRequestStore {
   friendRequests: FriendRequest[];
   fetchFriendsRequests: () => void;

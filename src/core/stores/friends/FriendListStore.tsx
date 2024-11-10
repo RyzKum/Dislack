@@ -7,11 +7,13 @@ interface FriendListStore {
   fetchFriends: () => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useFriendListStore = create<FriendListStore>((set) => ({
   friends: [],
   fetchFriends: async () => {
     try {
-      const response = await axios.get('http://localhost:3000/social/friends', { withCredentials: true })
+      const response = await axios.get(`${API_URL}/social/friends`, { withCredentials: true })
       set({ friends: response.data });
     } catch (error) {
       console.error("Error fetching friends list", error);
